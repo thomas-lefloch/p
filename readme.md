@@ -1,8 +1,8 @@
 # P
 
-A simple project management tool, for me.  
-Created to work with PowerToys Run.  
-Add the scripts to your path.
+A collection of script to manage projects.  
+Created to be used with PowerToys Run.  
+Add the scripts to your path to make them seeable by PowerToys. 
 You might want to change the default projects root, which is:
 ```
 C:\Users\%USERNAME%\Documents\projects
