@@ -11,24 +11,25 @@ if "%1"=="" (
     set "project_name=%1"
 )
 
-REM Vérifie si le nom du projet est vide
 if "%project_name%"=="" (
     echo Error: No project name given
+    echo Usage: p_create.bat ^<project_name^>
+    pause
     exit /b
 )
 
-REM Crée le dossier projects s'il n'existe pas déjà
 if not exist "%projects_root%" (
     mkdir "%projects_root%" >nul
 )
 
 if not exist "%projects_root%" (
-    echo Error:  Making project folder: "%projects_root%"
+    echo Error:  Making projects folder: "%projects_root%"
 )
 
 set "project_path=%projects_root%\%project_name%"
 if exist project_path (
-    echo Error: Folder already exists.
+    echo Error: Folder "%project_name%" already exists.
+    pause
     exit /b
 )
 
