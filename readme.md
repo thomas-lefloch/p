@@ -25,8 +25,14 @@ Open the given project with VScode
 ```
 p_code.bat project
 ```
+- **p_term.bat:**  
+Launch cmd terminal at the given project root
+```
+p_term.bat project
+```
 - **p_explore.bat:**  
 Launch windows explorer at the projects root  
 ```
 p_explore.bat
 ```
+
