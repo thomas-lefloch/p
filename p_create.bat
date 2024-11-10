@@ -24,6 +24,8 @@ if not exist "%projects_root%" (
 
 if not exist "%projects_root%" (
     echo Error:  Making projects folder: "%projects_root%"
+    pause
+    exit /b
 )
 
 set "project_path=%projects_root%\%project_name%"

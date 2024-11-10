@@ -24,6 +24,7 @@ set "project_dir=%projects_root%\%project_name%"
 
 if not exist "%project_dir%" (
     echo Error: The project folder "%project_dir%" does not exist.
+    pause
     exit /b
 )
 
@@ -31,6 +32,7 @@ set "script_path=%project_dir%\%script_name%.bat"
 
 if not exist "%script_path%" (
     echo Error: The script "%script_name%" does not exist in the folder "%project_dir%".
+    pause
     exit /b
 )
 

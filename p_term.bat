@@ -12,6 +12,7 @@ set "full_path=%project_path%\%~1"
 
 if not exist "%full_path%" (
     echo The specified project does not exist: "%full_path%"
+    pause
     exit /b
 )
 
