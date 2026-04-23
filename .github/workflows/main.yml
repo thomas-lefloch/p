@@ -6,10 +6,8 @@ name: Build and Release Executables
 on:
   push:
     branches:
-      - 'main' 
-    tags:
-      - 'v*'
-
+      - refs/tags/*
+      
 jobs:
   build:
     strategy:
