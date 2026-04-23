@@ -42,7 +42,7 @@ jobs:
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             mv dist/main dist/p-macos
           fi
-          mv commands.conf home.conf readme.md -t dist/
+          mv commands.conf home.conf readme.md dist/
         shell: bash
 
       - name: Upload artifact
