@@ -34,13 +34,12 @@ jobs:
       - name: Rename executable
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            mv dist/main.exe dist/p-windows.exe
+            mv dist/main.exe dist/p.exe
           elif [[ "$RUNNER_OS" == "Linux" ]]; then
-            mv dist/main dist/p-linux
+            mv dist/main dist/p
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            mv dist/main dist/p-macos
+            mv dist/main dist/p
           fi
-          mv commands.conf home.conf readme.md dist/
         shell: bash
 
       - name: Upload artifact
@@ -61,8 +60,6 @@ jobs:
 
       - name: Download all build artifacts
         uses: actions/download-artifact@v8
-        with:
-          merge-multiple: true
 
       - name: List downloaded files (Debugging)
         run: ls -R
@@ -70,12 +67,18 @@ jobs:
       - name: Make files executable (Linux/Mac)
         run: chmod +x p-* || true
 
+      - name: Zip releases
+        run: |
+          zip commands.conf home.conf readme.md p-windows-latest/p.exe --out p-windows.zip
+          zip commands.conf home.conf readme.md p-ubuntu-latest/p --out p-ubuntu.zip
+          zip commands.conf home.conf readme.md p-macos-latest/p --out p-macos.zip
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           draft: false
           prerelease: false
           files: |
-            p-linux
-            p-windows.exe
-            p-macos
+            p-ubuntu.zip
+            p-windows.zip
+            p-macos.zip
