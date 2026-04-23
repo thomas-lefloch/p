@@ -71,10 +71,8 @@ jobs:
         run: chmod +x p-* || true
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: |
