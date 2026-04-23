@@ -1,0 +1,56 @@
+# P
+A small and simple project "manager"
+
+The original intention was to create an extensible program that allow you to "manage" (create, open, ...) projects.
+
+A project is just a folder inside your `home`. Your home is the parent folder of all your projects.
+
+Your `home` is define in [./home.conf](./home.conf). You can modify it with the set-home command.  
+```sh 
+p set-home
+```
+
+## Usage
+```sh
+p <command_name> <project_name>
+```
+Will execute the given command with the given project. `Commands` are defined in [./commands.conf](./commands.conf) 
+
+Open the windows file explorer at the wonderful_project folder location:
+```sh
+p explorer wonderful_project
+```
+
+## Defaults commands
+- `set-home`: Allows you to easily change the root of your projects folders. (the only hardcoded command)
+- `explorer`: Open windows explorer at the project location
+- `vscode` (or `code`): Opens VSCode at the project location
+- `powershell` (or `term`): Opens a powershell at the project location
+
+you can modify / add new commands by modifying [./commands.conf](./commands.conf)
+
+# Creating new commands 
+
+## How To
+Let's add a new_command that is just a ls. Add a line to the commands.conf like so:
+```conf
+new_command=ls ${project_path} ${remaining_args}
+``` 
+the first `=` is the separator. So = in command names are not supported. Spaces in command names are not supported either.  
+After saving the file you can run.  
+```sh 
+p new_command <project_name> -a
+```
+
+## Variables  
+`${project_path}` : full path of the requested project folder (eg: <home>/<project_name>)  
+`${remaining_args}` : Options added after a project name.
+These variable are swapped with there values with python str.replace()  
+
+## Aliases
+You can create multiple name for the same command by referring to the name of the command.
+Aliases must be placed after the original command.
+```conf
+vscode=code.CMD ${project_path}
+code=vscode
+```
