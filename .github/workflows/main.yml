@@ -69,9 +69,9 @@ jobs:
 
       - name: Zip releases
         run: |
-          zip commands.conf home.conf readme.md p-windows-latest/p.exe --out p-windows.zip
-          zip commands.conf home.conf readme.md p-ubuntu-latest/p --out p-ubuntu.zip
-          zip commands.conf home.conf readme.md p-macos-latest/p --out p-macos.zip
+          zip p-windows.zip commands.conf home.conf readme.md p-windows-latest/p.exe
+          zip p-ubuntu.zip commands.conf home.conf readme.md p-ubuntu-latest/p
+          zip p-macos.zip commands.conf home.conf readme.md p-macos-latest/p
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
