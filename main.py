@@ -1,7 +1,6 @@
 import sys
 import os
 import subprocess
-import tkinter
 from tkinter import filedialog, messagebox
 
 # https://stackoverflow.com/questions/41315873/attempting-to-resolve-blurred-tkinter-text-scaling-on-windows-10-high-dpi-disp
@@ -30,13 +29,22 @@ project_folderpath = ""
 with open(home_filepath, "r") as f:
     project_folderpath = f.readline()
 
-if project_folderpath == "" or not os.path.isdir(project_folderpath):
+if project_folderpath == "":
     messagebox.showerror(
         title="Project folder not set !",
         message="No project folder found in 'home.conf'.",
         detail="run 'p set-home' to set a project folder",
     )
     exit(1)
+
+if not os.path.isdir(project_folderpath):
+    messagebox.showerror(
+        title="Invalid project folder !",
+        message="Project folder found in 'home.conf' does not exist.",
+        detail=project_folderpath,
+    )
+    exit(1)
+
 
 # Reading available commands
 LINE_MAX_CHAR_LENGTH = 1000
@@ -53,9 +61,6 @@ with open(command_filepath, "r") as f:
         line = f.readline(LINE_MAX_CHAR_LENGTH)
 
 
-# User input
-project = sys.argv[2]
-
 if requested_command not in commands:
     messagebox.showerror(
         title="Command not found !",
@@ -64,7 +69,12 @@ if requested_command not in commands:
     exit(2)
 
 command = commands[requested_command]
-command = command.replace("${project_path}", f"{project_folderpath}/{project}")
-command = command.replace("${remaining_args}", " ".join(sys.argv[3:]))
+
+# User input
+if "${project_path}" in command:
+    command = command.replace("${project_path}", f"{project_folderpath}/{sys.argv[2]}")
+
+if "${remaining_args}" in command:
+    command = command.replace("${remaining_args}", " ".join(sys.argv[3:]))
 
 subprocess.run(command)
