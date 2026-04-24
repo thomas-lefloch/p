@@ -14,6 +14,29 @@ windll.shcore.SetProcessDpiAwareness(1)
 home_filepath = "./home.conf"
 command_filepath = "./commands.conf"
 
+# Reading available commands
+LINE_MAX_CHAR_LENGTH = 1000
+commands = {}
+with open(command_filepath, "r") as f:
+    line = f.readline(LINE_MAX_CHAR_LENGTH)
+    while line != "":
+        command_name, *command_array = line.strip().split("=")
+        command = "=".join(command_array)
+        if command in commands:
+            commands[command_name] = commands[command]
+        else:
+            commands[command_name] = command
+        line = f.readline(LINE_MAX_CHAR_LENGTH)
+
+
+if not len(sys.argv[1]) <= 2:
+    print("Usage: p <command> [project_name]")
+    print("Available commands:")
+    print("\t- set-home")
+    for command in commands:
+        print(f"\t- {command}")
+        
+        
 requested_command = sys.argv[1]
 
 # set-home is the only hardcoded command.
@@ -23,8 +46,7 @@ if requested_command == "set-home":
         f.write(new_home)
     exit(0)
 
-
-# Reading project fodler path
+# Reading project folder path
 project_folderpath = ""
 with open(home_filepath, "r") as f:
     project_folderpath = f.readline()
@@ -44,22 +66,6 @@ if not os.path.isdir(project_folderpath):
         detail=project_folderpath,
     )
     exit(1)
-
-
-# Reading available commands
-LINE_MAX_CHAR_LENGTH = 1000
-commands = {}
-with open(command_filepath, "r") as f:
-    line = f.readline(LINE_MAX_CHAR_LENGTH)
-    while line != "":
-        command_name, *command_array = line.strip().split("=")
-        command = "=".join(command_array)
-        if command in commands:
-            commands[command_name] = commands[command]
-        else:
-            commands[command_name] = command
-        line = f.readline(LINE_MAX_CHAR_LENGTH)
-
 
 if requested_command not in commands:
     messagebox.showerror(
