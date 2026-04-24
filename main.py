@@ -53,7 +53,7 @@ with open(command_filepath, "r") as f:
     line = f.readline(LINE_MAX_CHAR_LENGTH)
     while line != "":
         command_name, *command_array = line.strip().split("=")
-        command = "".join(command_array)
+        command = "=".join(command_array)
         if command in commands:
             commands[command_name] = commands[command]
         else:
