@@ -69,18 +69,28 @@ if not os.path.isdir(project_folderpath):
     )
     sys.exit(1)
 
+# User input, command
 if requested_command not in commands:
     messagebox.showerror(
         title="Command not found !",
         message=f"Command '{requested_command}' was not found in 'commands.conf'.",
     )
     sys.exit(2)
-
+    
 command = commands[requested_command]
 
-# User input
+# Making sure the project exists to avoid weird behavior
+project_path = pathlib.Path(project_folderpath, sys.argv[2])
+if not project_path.exists():
+    messagebox.showerror(
+        title="Project not found !",
+        message=str(project_path),
+    )
+    sys.exit(3)
+
+# User input, project and args
 if "${project_path}" in command:
-    command = command.replace("${project_path}", str(pathlib.Path(project_folderpath, sys.argv[2])))
+    command = command.replace("${project_path}", str(project_path))
 
 if "${remaining_args}" in command:
     command = command.replace("${remaining_args}", " ".join(sys.argv[3:]))
@@ -92,3 +102,4 @@ except Exception:
         title="Failed to run command !",
         message=command,
     )
+    sys.exit(4)
