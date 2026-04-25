@@ -87,7 +87,7 @@ if "${remaining_args}" in command:
 
 try:
     subprocess.run(command.strip(), shell=True)
-except:
+except Exception:
     messagebox.showerror(
         title="Failed to run command !",
         message=command,
