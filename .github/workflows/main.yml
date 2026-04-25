@@ -69,7 +69,7 @@ jobs:
 
       - name: Zip releases
         run: |
-          zip -j p-windows.zip commands.conf home.conf readme.md p.cmd p-windows-latest/p
+          zip -j p-windows.zip commands.conf home.conf readme.md p.cmd p-windows-latest/p.exe
           zip -j p-ubuntu.zip commands.conf home.conf readme.md p.cmd p-ubuntu-latest/p
           zip -j p-macos.zip commands.conf home.conf readme.md p.cmd p-macos-latest/p
 
