@@ -23,6 +23,7 @@ p explorer wonderful_project
 
 ## Defaults commands
 - `set-home`: Allows you to easily change the root of your projects folders. (the only hardcoded command)
+- `create`: mkdir 
 - `explorer`: Open windows explorer at the project location
 - `vscode` (or `code`): Opens VSCode at the project location
 - `powershell` (or `term`): Opens a powershell at the project location
@@ -41,7 +42,7 @@ After saving the file you can run.
 ```sh 
 p new_command <project_name> -a
 ```
-
+Commands are run via python subprocess.run(command, shell=True)
 ## Variables  
 `${project_path}` : full path of the requested project folder (eg: <home>/<project_name>)  
 `${remaining_args}` : Options added after a project name.

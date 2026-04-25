@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 from tkinter import filedialog, messagebox
+import pathlib
 
 # https://stackoverflow.com/questions/41315873/attempting-to-resolve-blurred-tkinter-text-scaling-on-windows-10-high-dpi-disp
 from ctypes import windll
@@ -11,8 +12,9 @@ windll.shcore.SetProcessDpiAwareness(1)
 # import shutil
 # print(shutil.which("powershell"))
 
-home_filepath = "./home.conf"
-command_filepath = "./commands.conf"
+exe_folder = os.path.dirname(sys.argv[0])
+home_filepath = str(pathlib.Path(exe_folder, "home.conf"))
+command_filepath = str(pathlib.Path(exe_folder, "commands.conf"))
 
 # Reading available commands
 LINE_MAX_CHAR_LENGTH = 1000
@@ -29,13 +31,13 @@ with open(command_filepath, "r") as f:
         line = f.readline(LINE_MAX_CHAR_LENGTH)
 
 
-if not len(sys.argv[1]) <= 2:
+if len(sys.argv) < 2:
     print("Usage: p <command> [project_name]")
     print("Available commands:")
     print("\t- set-home")
     for command in commands:
         print(f"\t- {command}")
-        
+    sys.exit(0)
         
 requested_command = sys.argv[1]
 
@@ -43,8 +45,8 @@ requested_command = sys.argv[1]
 if requested_command == "set-home":
     new_home = filedialog.askdirectory(mustexist=True)
     with open(home_filepath, "w") as f:
-        f.write(new_home)
-    exit(0)
+        f.write(str(pathlib.Path(new_home)))
+    sys.exit(0)
 
 # Reading project folder path
 project_folderpath = ""
@@ -57,7 +59,7 @@ if project_folderpath == "":
         message="No project folder found in 'home.conf'.",
         detail="run 'p set-home' to set a project folder",
     )
-    exit(1)
+    sys.exit(1)
 
 if not os.path.isdir(project_folderpath):
     messagebox.showerror(
@@ -65,22 +67,28 @@ if not os.path.isdir(project_folderpath):
         message="Project folder found in 'home.conf' does not exist.",
         detail=project_folderpath,
     )
-    exit(1)
+    sys.exit(1)
 
 if requested_command not in commands:
     messagebox.showerror(
         title="Command not found !",
         message=f"Command '{requested_command}' was not found in 'commands.conf'.",
     )
-    exit(2)
+    sys.exit(2)
 
 command = commands[requested_command]
 
 # User input
 if "${project_path}" in command:
-    command = command.replace("${project_path}", f"{project_folderpath}/{sys.argv[2]}")
+    command = command.replace("${project_path}", str(pathlib.Path(project_folderpath, sys.argv[2])))
 
 if "${remaining_args}" in command:
     command = command.replace("${remaining_args}", " ".join(sys.argv[3:]))
 
-subprocess.run(command)
+try:
+    subprocess.run(command.strip(), shell=True)
+except:
+    messagebox.showerror(
+        title="Failed to run command !",
+        message=command,
+    )
