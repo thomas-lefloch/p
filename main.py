@@ -55,7 +55,7 @@ with open(home_filepath, "r") as f:
 
 if project_folderpath == "":
     messagebox.showerror(
-        title="Project folder not set !",
+        title="(p) Project folder not set !",
         message="No project folder found in 'home.conf'.",
         detail="run 'p set-home' to set a project folder",
     )
@@ -63,7 +63,7 @@ if project_folderpath == "":
 
 if not os.path.isdir(project_folderpath):
     messagebox.showerror(
-        title="Invalid project folder !",
+        title="(p) Invalid project folder !",
         message="Project folder found in 'home.conf' does not exist.",
         detail=project_folderpath,
     )
@@ -72,7 +72,7 @@ if not os.path.isdir(project_folderpath):
 # User input, command
 if requested_command not in commands:
     messagebox.showerror(
-        title="Command not found !",
+        title="(p) Command not found !",
         message=f"Command '{requested_command}' was not found in 'commands.conf'.",
     )
     sys.exit(2)
@@ -83,8 +83,9 @@ command = commands[requested_command]
 project_path = pathlib.Path(project_folderpath, sys.argv[2])
 if not project_path.exists():
     messagebox.showerror(
-        title="Project not found !",
-        message=str(project_path),
+        title="(p) Project not found !",
+        message="Project not found !",
+        detail=str(project_path),
     )
     sys.exit(3)
 
@@ -99,7 +100,8 @@ try:
     subprocess.run(command.strip(), shell=True)
 except Exception:
     messagebox.showerror(
-        title="Failed to run command !",
-        message=command,
+        title="(p) Failed to run command !",
+        message="Failed to run command !",
+        detail=command,
     )
     sys.exit(4)
