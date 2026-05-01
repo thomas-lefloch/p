@@ -18,16 +18,17 @@ command_filepath = str(pathlib.Path(exe_folder, "commands.conf"))
 
 # Reading available commands
 LINE_MAX_CHAR_LENGTH = 1000
-commands = {}
+commands: dict[str, list[str]] = {}
 with open(command_filepath, "r") as f:
     line = f.readline(LINE_MAX_CHAR_LENGTH)
     while line != "":
         command_name, *command_array = line.strip().split("=")
         command = "=".join(command_array)
-        if command in commands:
+        # aliases
+        if command in commands: 
             commands[command_name] = commands[command]
         else:
-            commands[command_name] = command
+            commands[command_name] = command.split()
         line = f.readline(LINE_MAX_CHAR_LENGTH)
 
 
@@ -79,8 +80,16 @@ if requested_command not in commands:
     
 command = commands[requested_command]
 
+if len(sys.argv) < 3:
+    messagebox.showerror(
+        title="(p) Project Not found !",
+        message=f"You must provide a project name.",
+    )
+    
+project_name = sys.argv[2]
+
 # Making sure the project exists to avoid weird behavior
-project_path = pathlib.Path(project_folderpath, sys.argv[2])
+project_path = pathlib.Path(project_folderpath, project_name)
 if not project_path.exists():
     messagebox.showerror(
         title="(p) Project not found !",
@@ -90,18 +99,18 @@ if not project_path.exists():
     sys.exit(3)
 
 # User input, project and args
-if "${project_path}" in command:
-    command = command.replace("${project_path}", str(project_path))
-
-if "${remaining_args}" in command:
-    command = command.replace("${remaining_args}", " ".join(sys.argv[3:]))
+for i in range(len(command)):
+    if command[i] == "${project_path}":
+        command[i] = str(project_path)
+    elif command[i] == "${remaining_args}":
+        command[i] = " ".join(sys.argv[3:])
 
 try:
-    subprocess.run(command.strip(), shell=True)
+    subprocess.run(command)
 except Exception:
     messagebox.showerror(
         title="(p) Failed to run command !",
         message="Failed to run command !",
-        detail=command,
+        detail=" ".join(command),
     )
     sys.exit(4)

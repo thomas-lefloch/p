@@ -42,7 +42,7 @@ After saving the file you can run.
 ```sh 
 p new_command <project_name> -a
 ```
-Commands are run via python subprocess.run(command, shell=True)
+Commands are run via python subprocess.run(command)
 ## Variables  
 `${project_path}` : full path of the requested project folder (eg: <home>/<project_name>)  
 `${remaining_args}` : Options added after a project name.
