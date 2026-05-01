@@ -6,6 +6,7 @@ import pathlib
 
 # https://stackoverflow.com/questions/41315873/attempting-to-resolve-blurred-tkinter-text-scaling-on-windows-10-high-dpi-disp
 from ctypes import windll
+
 windll.shcore.SetProcessDpiAwareness(1)
 
 # To debug commands:
@@ -25,7 +26,7 @@ with open(command_filepath, "r") as f:
         command_name, *command_array = line.strip().split("=")
         command = "=".join(command_array)
         # aliases
-        if command in commands: 
+        if command in commands:
             commands[command_name] = commands[command]
         else:
             commands[command_name] = command.split()
@@ -39,7 +40,7 @@ if len(sys.argv) < 2:
     for command in commands:
         print(f"\t- {command}")
     sys.exit(0)
-        
+
 requested_command = sys.argv[1]
 
 # set-home and create are the only hardcoded command.
@@ -54,7 +55,7 @@ if requested_command == "set-home":
 project_folderpath = ""
 with open(home_filepath, "r") as f:
     project_folderpath = f.readline()
-    
+
 if project_folderpath == "":
     messagebox.showerror(
         title="(p) Project folder not set !",
@@ -78,7 +79,7 @@ if requested_command not in commands:
         message=f"Command '{requested_command}' was not found in 'commands.conf'.",
     )
     sys.exit(2)
-    
+
 command = commands[requested_command]
 
 if len(sys.argv) < 3:
@@ -86,7 +87,7 @@ if len(sys.argv) < 3:
         title="(p) Project Not found !",
         message=f"You must provide a project name.",
     )
-    
+
 project_name = sys.argv[2]
 project_path = pathlib.Path(project_folderpath, project_name)
 
@@ -98,8 +99,23 @@ for i in range(len(command)):
         command[i] = " ".join(sys.argv[3:])
 
 try:
-    subprocess.run(command, creationflags=subprocess.CREATE_NO_WINDOW)
-except Exception:
+    command_code = subprocess.run(
+        command, check=False, creationflags=subprocess.CREATE_NO_WINDOW
+    )
+# Can't do process exit code because windows explorer seem to always return 1
+# except subprocess.CalledProcessError as err:
+#     details = " ".join(err.cmd)
+#     if err.stdout:
+#         details += "\n stdout:" + err.stdout
+#     if err.stderr:
+#         details += "\n stderr:" + err.stderr
+
+#     messagebox.showerror(
+#         title="(p) Non zero exit code !",
+#         message=f"The following command returned {err.returncode}.",
+#         detail=details,
+#     )
+except subprocess.SubprocessError:
     messagebox.showerror(
         title="(p) Failed to run command !",
         message="Failed to run command !",
