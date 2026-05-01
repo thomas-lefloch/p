@@ -5,7 +5,7 @@ The original intention was to create an extensible program that allow you to "ma
 
 A project is just a folder inside your `home`. Your home is the parent folder of all your projects.
 
-Your `home` is define in [./home.conf](./home.conf). You can modify it with the set-home command.  
+Your `home` is define in [./home.conf](./home.conf). You can modify it with the set-home command. This is the first command you should run.  
 ```sh 
 p set-home
 ```
@@ -22,17 +22,22 @@ p explorer wonderful_project
 ```
 
 ## Defaults commands
+On Linux and MacOS, the only default command is `set-home`.  
+You will need to create the `./commands.conf` file. See [Creating new commands chapter](##creating-new-commands)
+
+Default commands on Windows:
 - `set-home`: Allows you to easily change the root of your projects folders. (the only hardcoded command)
 - `create`: mkdir 
 - `explorer`: Open windows explorer at the project location
 - `vscode` (or `code`): Opens VSCode at the project location
 - `powershell` (or `term`): Opens a powershell at the project location
 
-you can modify / add new commands by modifying [./commands.conf](./commands.conf)
+You can modify / add new commands by modifying [./commands.conf](./commands.conf)
+I strongly encourage you to customise the commands to fit your habits. 
 
-# Creating new commands 
+## Creating new commands 
 
-## How To
+### How To
 Let's add a new_command that is just a ls. Add a line to the commands.conf like so:
 ```conf
 new_command=ls ${project_path} ${remaining_args}
@@ -43,12 +48,12 @@ After saving the file you can run.
 p new_command <project_name> -a
 ```
 Commands are run via python subprocess.run(command)
-## Variables  
+
+### Variables  
 `${project_path}` : full path of the requested project folder (eg: <home>/<project_name>)  
 `${remaining_args}` : Options added after a project name.
-These variable are swapped with there values with python str.replace()  
 
-## Aliases
+### Aliases
 You can create multiple name for the same command by referring to the name of the command.
 Aliases must be placed after the original command.
 ```conf

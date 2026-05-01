@@ -9,3 +9,5 @@ main.spec
 
 # Virtual environments
 .venv
+*.exe
+home.conf

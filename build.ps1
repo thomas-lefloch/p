@@ -1,4 +1,3 @@
-pyinstaller --onefile main.py --noconsole
-cp commands.conf dist
-cp home.conf dist
-cp p.cmd dist
+rm main.exe
+pyinstaller --onefile main.py --noconsole 
+mv ./dist/main.exe ./main.exe

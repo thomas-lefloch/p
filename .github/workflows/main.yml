@@ -29,18 +29,7 @@ jobs:
         run: pip install pyinstaller
 
       - name: Build executable
-        run: pyinstaller --onefile main.py --noconsole
-
-      - name: Rename executable
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            mv dist/main.exe dist/p.exe
-          elif [[ "$RUNNER_OS" == "Linux" ]]; then
-            mv dist/main dist/p
-          elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            mv dist/main dist/p
-          fi
-        shell: bash
+        run: pyinstaller --onefile main.py --noconsole -n p
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
@@ -69,9 +58,10 @@ jobs:
 
       - name: Zip releases
         run: |
+          touch home.conf
           zip -j p-windows.zip commands.conf home.conf readme.md p-windows-latest/p.exe
-          zip -j p-ubuntu.zip commands.conf home.conf readme.md p-ubuntu-latest/p
-          zip -j p-macos.zip commands.conf home.conf readme.md p-macos-latest/p
+          zip -j p-ubuntu.zip home.conf readme.md p-ubuntu-latest/p
+          zip -j p-macos.zip home.conf readme.md p-macos-latest/p
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
