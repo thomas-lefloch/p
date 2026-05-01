@@ -34,11 +34,16 @@ with open(command_filepath, "r") as f:
 
 
 if len(sys.argv) < 2:
-    print("Usage: p <command> [project_name]")
-    print("Available commands:")
-    print("\t- set-home")
-    for command in commands:
-        print(f"\t- {command}")
+    available_commands = "Available commands:"
+    available_commands += f"\n- set-home"
+    for command_name, command in commands.items():
+        available_commands += f"\n- {command_name} : {" ".join(command)}"
+    
+    messagebox.showinfo (
+        title ="(p) Usage",
+        message="p <command> [project_name]",
+        detail=available_commands
+    )
     sys.exit(0)
 
 requested_command = sys.argv[1]
