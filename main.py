@@ -42,18 +42,19 @@ if len(sys.argv) < 2:
         
 requested_command = sys.argv[1]
 
-# set-home is the only hardcoded command.
+# set-home and create are the only hardcoded command.
 if requested_command == "set-home":
     new_home = filedialog.askdirectory(mustexist=True)
     with open(home_filepath, "w") as f:
         f.write(str(pathlib.Path(new_home)))
     sys.exit(0)
 
+
 # Reading project folder path
 project_folderpath = ""
 with open(home_filepath, "r") as f:
     project_folderpath = f.readline()
-
+    
 if project_folderpath == "":
     messagebox.showerror(
         title="(p) Project folder not set !",
@@ -87,16 +88,7 @@ if len(sys.argv) < 3:
     )
     
 project_name = sys.argv[2]
-
-# Making sure the project exists to avoid weird behavior
 project_path = pathlib.Path(project_folderpath, project_name)
-if not project_path.exists():
-    messagebox.showerror(
-        title="(p) Project not found !",
-        message="Project not found !",
-        detail=str(project_path),
-    )
-    sys.exit(3)
 
 # User input, project and args
 for i in range(len(command)):
@@ -106,7 +98,7 @@ for i in range(len(command)):
         command[i] = " ".join(sys.argv[3:])
 
 try:
-    subprocess.run(command)
+    subprocess.run(command, creationflags=subprocess.CREATE_NO_WINDOW)
 except Exception:
     messagebox.showerror(
         title="(p) Failed to run command !",
